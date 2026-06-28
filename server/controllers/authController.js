@@ -1,18 +1,18 @@
-const user = require("../models/User");
+const User = require("../models/User");
 
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-    const existingUser = await user.findOne("email");
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return await res
         .status(400)
         .json({ message: "Email Already Registered" });
     }
 
-    const user = await user.Create(name, email, password, role);
+    const user = await User.create({ name, email, password, role });
 
-    res.status(400).json({
+    res.status(201).json({
       success: true,
       user: {
         id: Date.now(),
@@ -23,24 +23,25 @@ exports.register = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ success: false, meassage: error.meassage });
+    console.log("Error:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await user.findOne("email");
+    const user = await user.findOne({ email });
     if (!user) {
       return res
-        .status(500)
+        .status(401)
         .json({ success: false, message: "Invalid Creaditial" });
     }
 
     const isMatch = await comparedPassword(password);
     if (!isMatch) {
       return res
-        .status(500)
+        .status(401)
         .json({ success: false, message: "Invalid Creaditial" });
     }
 
@@ -51,14 +52,16 @@ exports.login = async (req, res) => {
       role: user.role,
     });
   } catch (error) {
+    console.log("Error:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
 exports.getMe = async (req, res) => {
   try {
-    res.json({ success: true, user: req.user });
+    res.status(201).json({ success: true, User: req.User });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.meassage });
+    console.log("Error:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };

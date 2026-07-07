@@ -1,8 +1,8 @@
 const User = require("../models/User");
+const generateToken = require("../utils/generateToken");
 
 exports.register = async (req, res) => {
   try {
-    // console.log("body:", req.body);
     const { name, email, password, role } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -13,14 +13,16 @@ exports.register = async (req, res) => {
 
     const user = await User.create({ name, email, password, role });
 
+    const token = generateToken(user._id);
     res.status(201).json({
       success: true,
+      token,
       user: {
-        id: Date.now(),
+        id: user._id,
         name: user.name,
         email: user.email,
         password: user.password,
-        role: user.name,
+        role: user.role,
       },
     });
   } catch (error) {
@@ -32,25 +34,31 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await user.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res
         .status(401)
         .json({ success: false, message: "Invalid Creaditial" });
     }
 
-    const isMatch = await comparedPassword(password);
+    const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return res
         .status(401)
         .json({ success: false, message: "Invalid Creaditial" });
     }
 
-    res.json({
-      id: Date.now(),
-      name: user.name,
-      email: user.email,
-      role: user.role,
+    const token = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
     console.log("Error:", error);
@@ -60,7 +68,7 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
   try {
-    res.status(201).json({ success: true, User: req.User });
+    res.status(201).json({ success: true, user: req.user });
   } catch (error) {
     console.log("Error:", error);
     res.status(500).json({ success: false, message: error.message });

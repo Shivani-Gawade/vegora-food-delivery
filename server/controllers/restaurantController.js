@@ -30,7 +30,7 @@ exports.createRestaurant = async (req, res) => {
 exports.getRestaurants = async (req, res) => {
   try {
     const restaurant = await Restaurant.find();
-    if (!restaurant) {
+    if (restaurant.length === 0) {
       return res.status(400).json({ message: "Does Not Exist" });
     }
     res.status(200).json({
@@ -47,7 +47,7 @@ exports.getRestaurantById = async (req, res) => {
   try {
     const { id } = req.params;
     const restaurant = await Restaurant.findById(id);
-    if (!restaurant) {
+    if (restaurant.length === 0) {
       return res.status(400).json({ message: "Does Not Exist" });
     }
     res.status(200).json({
@@ -67,7 +67,7 @@ exports.updateRestaurant = async (req, res) => {
       new: true, //return upadted doc
       runValidators: true, //validate the updated data
     });
-    if (!restaurant) {
+    if (restaurant.length === 0) {
       return res.status(400).json({ message: "Does Not Exist" });
     }
     res.status(200).json({
@@ -83,7 +83,7 @@ exports.deleteRestaurant = async (req, res) => {
   try {
     const { id } = req.params;
     const restaurant = await Restaurant.findByIdAndDelete(id);
-    if (!restaurant) {
+    if (restaurant.length === 0) {
       return res.status(404).json({ message: "Does Not Exist" });
     }
     res.status(200).json({

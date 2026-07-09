@@ -37,7 +37,7 @@ const createFood = async (req, res) => {
 const getFood = async (req, res) => {
   try {
     const food = await Food.find();
-    if (food.length === 0) {
+    if (!food) {
       return res.status(400).json({ message: "Does Not Exist" });
     }
 
@@ -54,7 +54,7 @@ const getFoodById = async (req, res) => {
   try {
     const { id } = req.params;
     const food = await Food.findById(id);
-    if (food.length === 0) {
+    if (!food) {
       return res.status(400).json({ message: "Does Not Exist" });
     }
 
@@ -75,7 +75,7 @@ const updateFood = async (req, res) => {
       new: true,
       runValidators: true,
     });
-    if (food.length === 0) {
+    if (!food) {
       return res.status(400).json({ message: "Does Not Exist" });
     }
 
@@ -92,7 +92,7 @@ const deleteFood = async (req, res) => {
   try {
     const { id } = req.params;
     const food = await Food.findByIdAndDelete(id);
-    if (food.length === 0) {
+    if (!food) {
       return res.status(400).json({ message: "Does Not Exist" });
     }
 

@@ -8,8 +8,9 @@ const {
   deleteFood,
 } = require("../controllers/foodController");
 const verifyToken = require("../middleware/authMiddleware");
+const upload = require("../middleware/multer");
 
-router.post("/", verifyToken, createFood);
+router.post("/", verifyToken, upload.single("foodImage"), createFood);
 router.get("/", getFood);
 router.get("/:id", getFoodById);
 router.put("/:id", verifyToken, updateFood);

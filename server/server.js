@@ -13,6 +13,6 @@ app.use("/auth", require("./routes/authRoute"));
 app.use("/api/restaurants", require("./routes/restaurantRoutes"));
 app.use("/api/food", require("./routes/foodRoutes"));
 
-app.listen(3000, () => {
-  console.log("Server is running on 3000");
+app.listen(process.env.PORT, () => {
+  console.log("server running");
 });

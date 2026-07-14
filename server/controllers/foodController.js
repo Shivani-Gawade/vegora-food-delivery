@@ -1,5 +1,6 @@
 const Food = require("../models/Food");
 const Restaurant = require("../models/Restaurant");
+const cloudinary = require("../config/cloudinary");
 
 const createFood = async (req, res) => {
   try {
@@ -16,6 +17,12 @@ const createFood = async (req, res) => {
       return res.status(404).json({ message: "Restaurant not found" });
     }
 
+    const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path, {
+      folder: "VEGORA_IMAGE",
+    });
+
+    // console.log(cloudinaryResponse);
+
     const food = await Food.create({
       foodName,
       description,
@@ -23,6 +30,7 @@ const createFood = async (req, res) => {
       category,
       restaurant,
       availability,
+      image: cloudinaryResponse.secure_url,
     });
 
     res.status(201).json({

@@ -6,11 +6,13 @@ const {
   getRestaurantById,
   updateRestaurant,
   deleteRestaurant,
+  searchRestaurant,
 } = require("../controllers/restaurantController");
 const verifyToken = require("../middleware/authMiddleware");
 
 router.post("/", verifyToken, createRestaurant);
 router.get("/", getRestaurants);
+router.get("/search", searchRestaurant);
 router.get("/:id", getRestaurantById);
 router.put("/:id", verifyToken, updateRestaurant);
 router.delete("/:id", verifyToken, deleteRestaurant);

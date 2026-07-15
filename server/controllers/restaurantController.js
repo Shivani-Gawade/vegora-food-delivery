@@ -94,3 +94,27 @@ exports.deleteRestaurant = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.searchRestaurant = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    if (!keyword) {
+      return res.status(400).json({ message: "keyword is required" });
+    }
+
+    const restaurant = await Restaurant.find({
+      restaurantName: {
+        $regex: keyword,
+        $options: "i",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      restaurant,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};

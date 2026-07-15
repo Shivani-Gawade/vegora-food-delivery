@@ -113,4 +113,92 @@ const deleteFood = async (req, res) => {
   }
 };
 
-module.exports = { createFood, getFood, getFoodById, updateFood, deleteFood };
+//search food
+
+const searchFood = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    if (!keyword) {
+      return res.status(400).json({
+        message: "keyword is required",
+      });
+    }
+
+    const food = await Food.find({
+      foodName: {
+        $regex: keyword,
+        $options: "i",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      food,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//filter by category
+
+const filterByCatgory = async (req, res) => {
+  try {
+    const { category } = req.query;
+    if (!category) {
+      return res.status(400).json({ message: "category is required" });
+    }
+
+    const food = await Food.find({
+      category: {
+        $regex: category,
+        $options: "i",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      food,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//filter by price
+
+const filterByPrice = async (req, res) => {
+  try {
+    const { minPrice, maxPrice } = req.query;
+
+    if (!minPrice & maxPrice) {
+      return res.status(400).json({ message: "price is required" });
+    }
+
+    const food = await Food.find({
+      price: {
+        $gte: minPrice,
+        $lte: maxPrice,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      food,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = {
+  createFood,
+  getFood,
+  getFoodById,
+  updateFood,
+  deleteFood,
+  searchFood,
+  filterByCatgory,
+  filterByPrice,
+};

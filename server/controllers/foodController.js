@@ -192,6 +192,29 @@ const filterByPrice = async (req, res) => {
   }
 };
 
+//pagination
+
+const paginateFood = async (req, res) => {
+  try {
+    const { pageNum } = req.query;
+
+    if (!pageNum) {
+      return res.status(400).json({ message: "pageNum is required" });
+    }
+
+    const page = Number(pageNum);
+    const skip = (page - 1) * 10;
+    const food = await Food.find().skip(skip).limit(10);
+
+    res.status(200).json({
+      success: true,
+      food,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   createFood,
   getFood,
@@ -201,4 +224,5 @@ module.exports = {
   searchFood,
   filterByCatgory,
   filterByPrice,
+  paginateFood,
 };

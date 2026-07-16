@@ -9,6 +9,7 @@ const {
   searchFood,
   filterByCatgory,
   filterByPrice,
+  paginateFood,
 } = require("../controllers/foodController");
 const verifyToken = require("../middleware/authMiddleware");
 const upload = require("../middleware/multer");
@@ -18,6 +19,7 @@ router.get("/", getFood);
 router.get("/search", searchFood);
 router.get("/filter/category", filterByCatgory);
 router.get("/filter/price", filterByPrice);
+router.get("/pagination", paginateFood);
 router.get("/:id", getFoodById);
 router.put("/:id", verifyToken, updateFood);
 router.delete("/:id", verifyToken, deleteFood);

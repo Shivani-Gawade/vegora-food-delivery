@@ -12,6 +12,7 @@ app.use(express.json());
 app.use("/auth", require("./routes/authRoute"));
 app.use("/api/restaurants", require("./routes/restaurantRoutes"));
 app.use("/api/food", require("./routes/foodRoutes"));
+app.use("/api/wishlist", require("./routes/wishlistRoutes"));
 
 app.listen(process.env.PORT, () => {
   console.log("server running");
